@@ -1,0 +1,86 @@
+{
+  "id": "3117792",
+  "name": "课多多H5小程序直播系统",
+  "font_family": "icon",
+  "css_prefix_text": "icon-",
+  "description": "h5和小程序系统的资源svg图库",
+  "glyphs": [
+    {
+      "icon_id": "26998918",
+      "name": "toupin",
+      "font_class": "toupin",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "26998919",
+      "name": "dianzan",
+      "font_class": "dianzan",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "26998920",
+      "name": "yuyin",
+      "font_class": "yuyin",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "26989623",
+      "name": "Vector",
+      "font_class": "Vector",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "26989624",
+      "name": "Vector2",
+      "font_class": "Vector2",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "26989626",
+      "name": "Vector4",
+      "font_class": "Vector4",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "26989617",
+      "name": "Ellipse19",
+      "font_class": "Ellipse19",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "26989619",
+      "name": "Frame347",
+      "font_class": "Frame347",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "26989620",
+      "name": "Rectangle 11",
+      "font_class": "a-rectangle12",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "26989621",
+      "name": "Polygon1",
+      "font_class": "Polygon1",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "26989622",
+      "name": "Vector1",
+      "font_class": "Vector1",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    }
+  ]
+}
