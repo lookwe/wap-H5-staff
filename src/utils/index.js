@@ -1,5 +1,11 @@
 import dayjs from 'dayjs'
-import { post, get, put, del, save } from './fetch'
+import {
+    post,
+    get,
+    put,
+    del,
+    save
+} from './fetch'
 export default {
     // 加密手机号，185****8811
     encryPhone(val) {
@@ -52,6 +58,10 @@ export default {
         return newArr
     },
 
+    setLocalData() {
+
+    },
+
     //複製文本內容
     copyText: (text, callBack) => {
         const textarea = document.createElement('input')
@@ -79,5 +89,5 @@ export default {
     get,
     put,
     del,
-    save
+    save,
 }

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Toast } from 'vant'
 
-let apiTop = process.env.VUE_APP_BASE_API
+let baseUrl = process.env.VUE_APP_BASE_API
 let contentType = 'application/json;charset=UTF-8'
 axios.interceptors.request.use(
     (config) => {
@@ -74,12 +74,12 @@ axios.interceptors.response.use(
 )
 
 // http request
-const request = function (baseUrl, url, method, params, urlParams) {
+const request = function (url, method, params, urlParams) {
     const { isHandleError } = params || {}
     params = ['get', 'delete'].includes(method) ? { params } : params
     urlParams = urlParams && { params: urlParams }
     return new Promise((resolve, reject) => {
-        axios[method](baseUrl + url, params, urlParams)
+        axios[method](url, params, urlParams)
             .then((res) => {
                 const code = res.data.code
                 if (code === 200) {
@@ -98,16 +98,16 @@ const request = function (baseUrl, url, method, params, urlParams) {
 }
 
 const post = (url, params, urlParams) => {
-    return request(apiTop, url, 'post', params, urlParams)
+    return request(`${baseUrl}/${url}`, 'post', params, urlParams)
 }
 const del = (url, params) => {
-    return request(apiTop, url, 'delete', params)
+    return request(`${baseUrl}/${url}`, 'delete', params)
 }
 const put = (url, params, urlParams) => {
-    return request(apiTop, url, 'put', params, urlParams)
+    return request(`${baseUrl}/${url}`, 'put', params, urlParams)
 }
 const get = (url, params) => {
-    return request(apiTop, url, 'get', params)
+    return request(`${baseUrl}/${url}`, 'get', params)
 }
 // 编辑或新增
 const save = async (url, params = {}) => {

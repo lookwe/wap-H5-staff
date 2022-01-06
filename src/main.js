@@ -7,9 +7,6 @@ import instructions from '@/utils/instructions'
 import filters from '@/utils/filters'
 import utils from '@/utils'
 import '@/components'
-
-import 'vant/lib/index.css';
-import 'vant/lib/icon/local.css';
 import './assets/icon/iconfont.css'
 
 Object.keys(utils).forEach((k) => {

@@ -6,14 +6,13 @@
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-const Main = () => import( /* webpackChunkName: 'Main' */ '@/views/main/index.vue')
-const Product = () => import( /* webpackChunkName: 'Product' */ '@/views/product/index.vue')
-const livePlayer = () => import( /* webpackChunkName: 'livePlayer' */ '@/views/live-player/index.vue')
-const login = () => import( /* webpackChunkName: 'login' */ '@/views/login/index.vue')
+const livePlayer = () => import(/* webpackChunkName: 'livePlayer' */ '@/views/live-player/index.vue')
+const login = () => import(/* webpackChunkName: 'login' */ '@/views/login/index.vue')
 
 Vue.use(VueRouter)
 
-const routes = [{
+const routes = [
+    {
         path: '/',
         redirect: '/login'
     },
@@ -26,18 +25,7 @@ const routes = [{
         path: '/live-player',
         name: 'live-player',
         component: livePlayer
-    },
-    {
-        path: '/main',
-        name: 'main',
-        component: Main
-    },
-    {
-        path: '/product',
-        name: 'product',
-        component: Product
-    },
-
+    }
 ]
 
 const router = new VueRouter({
