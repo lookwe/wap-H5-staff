@@ -1,5 +1,8 @@
 import axios from 'axios'
-import { Toast } from 'vant'
+import {
+    Toast
+} from 'vant'
+import LocalStorage from "@/utils/localStorage";
 
 let baseUrl = process.env.VUE_APP_BASE_API
 let contentType = 'application/json;charset=UTF-8'
@@ -8,7 +11,7 @@ axios.interceptors.request.use(
         let headers = {
             'X-Requested-With': 'XMLHttpRequest',
             'Content-Type': contentType,
-            token: sessionStorage.getItem('token'),
+            token: LocalStorage.get("userInfo").token,
             timeout: 100000
         }
         config.headers = headers
@@ -74,10 +77,16 @@ axios.interceptors.response.use(
 )
 
 // http request
-const request = function (url, method, params, urlParams) {
-    const { isHandleError } = params || {}
-    params = ['get', 'delete'].includes(method) ? { params } : params
-    urlParams = urlParams && { params: urlParams }
+const request = function(url, method, params, urlParams) {
+    const {
+        isHandleError
+    } = params || {}
+    params = ['get', 'delete'].includes(method) ? {
+        params
+    } : params
+    urlParams = urlParams && {
+        params: urlParams
+    }
     return new Promise((resolve, reject) => {
         axios[method](url, params, urlParams)
             .then((res) => {
@@ -111,8 +120,12 @@ const get = (url, params) => {
 }
 // 编辑或新增
 const save = async (url, params = {}) => {
-    params = { ...params }
-    const { id } = params
+    params = {
+        ...params
+    }
+    const {
+        id
+    } = params
     if (id) {
         delete params.id
         return put(`${url}/${id}`, params)
@@ -121,4 +134,10 @@ const save = async (url, params = {}) => {
     }
 }
 
-export { post, get, del, put, save }
+export {
+    post,
+    get,
+    del,
+    put,
+    save
+}

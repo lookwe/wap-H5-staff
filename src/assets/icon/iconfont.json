@@ -6,21 +6,21 @@
   "description": "h5和小程序系统的资源svg图库",
   "glyphs": [
     {
-      "icon_id": "26998918",
-      "name": "toupin",
-      "font_class": "toupin",
+      "icon_id": "27006498",
+      "name": "dianzan",
+      "font_class": "dianzan",
       "unicode": "e617",
       "unicode_decimal": 58903
     },
     {
-      "icon_id": "26998919",
-      "name": "dianzan",
-      "font_class": "dianzan",
+      "icon_id": "27006499",
+      "name": "toupin",
+      "font_class": "toupin",
       "unicode": "e619",
       "unicode_decimal": 58905
     },
     {
-      "icon_id": "26998920",
+      "icon_id": "27006500",
       "name": "yuyin",
       "font_class": "yuyin",
       "unicode": "e61a",

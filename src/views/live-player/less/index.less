@@ -1,0 +1,169 @@
+.live-player {
+    background: #1e1e1e;
+    height: 100vh;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    // 下半部
+    .live-lower-half {
+        overflow-y: auto;
+        margin-top: 5px;
+        position: relative;
+
+        .live-notice {
+            color: #fff5db;
+        }
+    }
+
+    .live-header {
+        .live-user {
+            flex: 3;
+            overflow: hidden;
+            .live-user-rigth {
+                margin-left: 7px;
+            }
+            .live-user-name {
+                margin: 8px 0 5px 0;
+                width: 70px;
+                font-size: 13.5px;
+            }
+        }
+        .watch-user {
+            flex: 5;
+            position: relative;
+            flex-direction: row-reverse;
+            .temp-position {
+                width: 12px;
+            }
+            .watch-user-image {
+                margin: 0 3.5px;
+            }
+            .watch-user-sum {
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translatey(-50%);
+                padding: 1px 5px;
+                background: #3f3f3f;
+                color: #dddddd;
+                border-radius: 40%;
+            }
+        }
+    }
+
+    .live-main {
+        height: 200px;
+        background: #fff;
+        margin-top: 15px;
+    }
+
+    // 直播助手
+    .live-assistant {
+        background: #182f57;
+        border-radius: 5px;
+        padding: 10px 15px;
+        margin-bottom: 5px;
+    }
+
+    // 管理发言
+    .live-admin-speak {
+        background: #f83333;
+        border-radius: 5px;
+        color: #ffffff;
+        padding: 10px;
+        margin-top: 5px;
+        display: inline-block;
+        .admin {
+            color: #ffda56;
+        }
+    }
+
+    // 用户发言列表模块
+    .speak-list {
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 65px;
+        width: 80vw;
+        &__li {
+            margin: 9px 0;
+        }
+        .user-speak-name {
+            color: #a2c8df;
+            padding-right: 5px;
+        }
+        .new-user-add {
+            color: #dcdee0;
+        }
+    }
+
+    .speak-info-sun {
+        padding: 2px 4px;
+        background: #fff;
+        color: #70584f;
+        display: inline-block;
+        border-radius: 20px;
+        position: absolute;
+        top: -25px;
+        left: 15px;
+    }
+
+    .live-right-handel {
+        position: fixed;
+        bottom: 50px;
+        right: 0;
+        width: 50px;
+
+        .bnt {
+            width: 36px;
+            height: 36px;
+            background: #fff;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+    }
+
+    // 底部用户发言操作
+    .user-bottom-handel {
+        width: 100vw;
+        background: #1e1e1e;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 10;
+        .u-box {
+            padding: 5px 15px 20px;
+        }
+
+        .user-handel {
+            padding-right: 14px;
+            flex: 1;
+            height: 54px;
+            .bnt {
+                width: 36px;
+                height: 36px;
+                background: #363636;
+                border-radius: 50%;
+                margin-right: 15px;
+                text-align: center;
+                line-height: 36px;
+
+                .icon {
+                    color: #bbbbbb;
+                    font-size: 30px;
+                }
+
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+
+    // 样式穿透
+    /deep/.van-field__left-icon {
+        display: none;
+    }
+}
