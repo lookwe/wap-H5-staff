@@ -52,12 +52,14 @@
             </div>
         </div>
 
-        <!-- 右侧操作栏 -->
+        <!-- 右侧点赞特效栏 -->
         <div class="live-right-handel">
-            <div class="bnt"></div>
-            <div class="bnt"></div>
-            <div class="bnt"></div>
-            <div class="bnt"></div>
+            <canvas
+                id="thumsCanvas"
+                width="200"
+                height="400"
+                style="width: 68px; height: 220px"
+            ></canvas>
         </div>
 
         <!-- 底部发言模块 -->
@@ -81,7 +83,7 @@
                     <div class="bnt">
                         <van-icon class-prefix="icon" name="yuyin" />
                     </div>
-                    <div class="bnt">
+                    <div class="bnt" @click="onThumbClick">
                         <van-icon class-prefix="icon" name="Frame347" />
                     </div>
                 </div>
@@ -93,6 +95,8 @@
 <script>
 import mixin from "@/views/live-player/js/mixin";
 import { socket } from "@/utils/socket";
+import Canvas from "@/views/live-player/js/canvas";
+
 export default {
     name: "live-player-chat",
     mixins: [mixin],
@@ -101,6 +105,9 @@ export default {
             userValue: "",
             msgList: [], // 消息列表
         };
+    },
+    mounted() {
+        this.thumbsUpAni = new Canvas();
     },
     methods: {
         // 用户发送消息
@@ -137,10 +144,19 @@ export default {
         setMsg(msgData) {
             this.msgList.push(msgData);
         },
+
+        onThumbClick() {
+            this.thumbsUpAni.start();
+        },
     },
 };
 </script>
  
 <style scoped lang="less">
 @import "../less/index.less";
+.ab {
+    width: 500px;
+    height: 300px;
+    background: chocolate;
+}
 </style>
