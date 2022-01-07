@@ -58,7 +58,7 @@
                 id="thumsCanvas"
                 width="200"
                 height="400"
-                style="width: 68px; height: 220px"
+                style="width: 100px; height: 220px"
             ></canvas>
         </div>
 
@@ -133,8 +133,7 @@ export default {
                 },
                 message: this.userValue,
             };
-            console.log("发送消息");
-            console.log(json);
+
             socket.send(json).finally(() => {
                 this.userValue = "";
             });
@@ -147,6 +146,27 @@ export default {
 
         onThumbClick() {
             this.thumbsUpAni.start();
+            this.sendUpvote();
+        },
+
+        // 发送点赞
+        sendUpvote() {
+            const json = {
+                messageType: "UPVOTE",
+                data: {
+                    guestId: this.userInfo.id,
+                    guestSession: this.socketSession.sessionTo,
+                    avatarUrl:
+                        this.userInfo.avatarUrl ||
+                        "https://static.sxmaps.com/icon/teacher_man.png",
+                    nickName: this.userInfo.nickName,
+                    roomNumber: this.liveData.lecturerLivingSecretKey,
+                    userId: this.userInfo.id,
+                },
+            };
+            socket.send(json).finally(() => {
+                // 操作完毕
+            });
         },
     },
 };
@@ -158,5 +178,6 @@ export default {
     width: 500px;
     height: 300px;
     background: chocolate;
+    margin: 0 auto;
 }
 </style>

@@ -15,7 +15,9 @@
                     </div>
                     <div class="live-user-rigth">
                         <div class="live-user-name u-line-1">升学教育</div>
-                        <div class="fz-12">点赞: 342</div>
+                        <div class="fz-12">
+                            点赞: {{ liveData.cacheUpvote }}
+                        </div>
                     </div>
                 </div>
                 <div class="watch-user flex">
@@ -161,9 +163,20 @@ export default {
                 case "USER_SEND_IMG":
                     break;
 
+                // [点赞]
+                case "UPVOTE":
+                    this.onSetUPVOTE(message);
+                    break;
+
                 default:
                     break;
             }
+        },
+
+        onSetUPVOTE(message) {
+            let data = this.liveData;
+            data.cacheUpvote = message || data.cacheUpvote;
+            this.setLiveData(data);
         },
 
         /* 根据直播房间ID 获取对应直播信息 **/

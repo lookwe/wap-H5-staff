@@ -1,3 +1,6 @@
+/**
+ * 图片和灵感来源于京东直播：https://wqs.jd.com/pglive/
+ */
 class ThumbsUpAni {
     imgsList = [];
     context;
@@ -13,6 +16,7 @@ class ThumbsUpAni {
         this.width = canvas.width;
         this.height = canvas.height;
     }
+
     loadImages() {
         const images = [
             'jfs/t1/93992/8/9049/4680/5e0aea04Ec9dd2be8/608efd890fd61486.png',
@@ -20,7 +24,11 @@ class ThumbsUpAni {
             'jfs/t1/98805/29/8975/5106/5e0aea05Ed970e2b4/98803f8ad07147b9.png',
             'jfs/t1/94291/26/9105/4344/5e0aea05Ed64b9187/5165fdf5621d5bbf.png',
             'jfs/t1/102753/34/8504/5522/5e0aea05E0b9ef0b4/74a73178e31bd021.png',
-            'jfs/t1/102954/26/9241/5069/5e0aea05E7dde8bda/720fcec8bc5be9d4.png'
+            'jfs/t1/102954/26/9241/5069/5e0aea05E7dde8bda/720fcec8bc5be9d4.png',
+            //
+            'jfs/t1/179995/27/263/3005/607ff05eE6c1d53a2/ffc9b4bc6051ce35.png',
+            'jfs/t1/128160/29/5636/4587/5ef31338E515eec02/8c0d7c5e64538efe.png',
+            'jfs/t1/112534/5/10853/4350/5ef31338E33a82774/894ac6f7e1b17922.png'
         ];
         const promiseAll = [];
         images.forEach((src) => {
