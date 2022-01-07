@@ -1,19 +1,8 @@
 import Vue from 'vue'
-import {
-    Tabbar,
-    TabbarItem,
-    Button,
-    Image as VanImage,
-    Search,
-    Icon,
-    Form,
-    Field,
-    Toast
-} from 'vant' //引入组件
-import Test from './test'
+import { Tabbar, TabbarItem, Button, Image as VanImage, Search, Icon, Form, Field, Toast, Loading } from 'vant' //引入组件
+import StreamPlayer from './streamPlayer'
 
-
-Vue.component('Test', Test)
+Vue.component('StreamPlayer', StreamPlayer)
 Vue.use(Tabbar)
 Vue.use(TabbarItem)
 Vue.use(Button)
@@ -23,3 +12,4 @@ Vue.use(Icon)
 Vue.use(Form)
 Vue.use(Field)
 Vue.use(Toast)
+Vue.use(Loading)

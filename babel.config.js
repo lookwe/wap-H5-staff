@@ -9,5 +9,6 @@ module.exports = {
                 style: (name) => `${name}/style/less`
             }
         ]
-    ]
+    ],
+    ignore: ['/src/components/streamPlayer/js/hrtc.js']
 }
