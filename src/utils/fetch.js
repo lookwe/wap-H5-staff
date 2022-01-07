@@ -11,7 +11,7 @@ axios.interceptors.request.use(
         let headers = {
             'X-Requested-With': 'XMLHttpRequest',
             'Content-Type': contentType,
-            token: LocalStorage.get("userInfo").token,
+            token: (LocalStorage.get("userInfo") || {}).token,
             timeout: 100000
         }
         config.headers = headers
