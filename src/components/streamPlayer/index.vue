@@ -3,9 +3,12 @@
         <van-loading class="loading" v-if="loading" type="spinner" />
         <template v-else>
             <div class="btn-con flex c" v-if="status !== 3">
-                <van-button :disabled="status !== 1" @click="_play" :type="status == 1 ? 'primary' : 'default'">{{
-                    statusStr
-                }}</van-button>
+                <van-button
+                    :disabled="status !== 1"
+                    @click="_play"
+                    :type="status == 1 ? 'primary' : 'default'"
+                    >{{ statusStr }}</van-button
+                >
             </div>
             <div id="screen-player"></div>
             <div id="main-player"></div>
@@ -14,70 +17,71 @@
 </template>
 
 <script>
-import WebRtc from './js/webrtc'
-import { mapState } from 'vuex'
-import { bus } from '@/utils/bus'
+// type = 1
+import WebRtc from "./js/webrtc";
+import { mapState } from "vuex";
+import { bus } from "@/utils/bus";
 // 因浏览器限制，h5版本两条流都有后方可开始播放
 export default {
     // 0:已结束，1:直播中，2:未开始
-    props: ['liveState'],
+    props: ["liveState"],
     data() {
         return {
             streamState: 0, // 0:没有流，1:可播放，2:已播放
-            loading: true
-        }
+            loading: true,
+        };
     },
     watch: {
         liveState(v) {
             if (v === 2) {
-                this.streamState = 0
+                this.streamState = 0;
             }
-        }
+        },
     },
     computed: {
-        ...mapState('account', ['userInfo']),
+        ...mapState("account", ["userInfo"]),
         // 0:已结束，1:可播放，2:未开始，3:已播放
         status() {
-            const { liveState, streamState } = this
+            const { liveState, streamState } = this;
             if (liveState === 0 || liveState === 2) {
-                return liveState
+                return liveState;
             } else {
-                return [2, 1, 3][streamState]
+                return [2, 1, 3][streamState];
             }
         },
         statusStr() {
-            return ['直播已结束', '开始播放', '直播未开始', ''][this.status]
-        }
+            return ["直播已结束", "开始播放", "直播未开始", ""][this.status];
+        },
     },
     mounted() {
-        const self = this
-        bus.$on('stream-can-play', () => {
-            self.streamState = 1
-        })
+        const self = this;
+        bus.$on("stream-can-play", () => {
+            self.streamState = 1;
+        });
     },
     beforeDestroy() {
-        bus.$off('stream-can-play')
+        bus.$off("stream-can-play");
     },
     methods: {
         // 初始化播放器
-        async init(roomNumber) {
-            this.loading = true
-            const res = await this.$post('hwRtc/student/getSignature', {
-                roomNumber
-            })
-            res.userName = this.userInfo.nickName
-            await WebRtc.init(roomNumber, res)
-            this.loading = false
+        async init({ roomNumber }) {
+            this.loading = true;
+            const res = await this.$post("hwRtc/student/getSignature", {
+                roomNumber,
+            });
+            res.userName = this.userInfo.nickName;
+            await WebRtc.init(roomNumber, res);
+            this.loading = false;
         },
         // 开始播放
         _play() {
-            WebRtc.play('main-player', 'screen-player')
-            this.streamState = 2
+            WebRtc.play("main-player", "screen-player");
+            this.streamState = 2;
         },
         // 停止播放
-        _stop() {}
-    }
-}
+        _stop() {},
+    },
+};
 </script>
 
 <style lang="less" scoped>

@@ -95,7 +95,6 @@
 <script>
 import mixin from "@/views/live-player/js/mixin";
 import { socket } from "@/utils/socket";
-import Canvas from "@/views/live-player/js/canvas";
 
 export default {
     name: "live-player-chat",
@@ -105,9 +104,6 @@ export default {
             userValue: "",
             msgList: [], // 消息列表
         };
-    },
-    mounted() {
-        this.thumbsUpAni = new Canvas();
     },
     methods: {
         // 用户发送消息
@@ -144,13 +140,8 @@ export default {
             this.msgList.push(msgData);
         },
 
+        // 点赞点击
         onThumbClick() {
-            this.thumbsUpAni.start();
-            this.sendUpvote();
-        },
-
-        // 发送点赞
-        sendUpvote() {
             const json = {
                 messageType: "UPVOTE",
                 data: {

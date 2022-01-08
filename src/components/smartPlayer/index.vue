@@ -1,16 +1,18 @@
 <template>
-    <div class="record-player">
+    <div class="smart-player">
         <van-loading class="loading" v-if="loading" type="spinner" />
-        <div class="btn-con flex c" v-if="!isPlay">
-            <van-button @click="_play" type="primary">{{
-                statusStr
-            }}</van-button>
+        <div class="btn-con flex c" v-if="status !== 3">
+            <van-button
+                :disabled="status !== 1"
+                @click="_play"
+                type="primary"
+                >{{ statusStr }}</van-button
+            >
         </div>
         <video
-            id="recordVideo"
+            id="smartVideo"
             class="video-js vjs-default-skin vjs-big-play-centered"
             x-webkit-airplay="allow"
-            :poster="roomInfo.coverUrl"
             webkit-playsinline
             playsinline
             x5-video-player-type="h5"
@@ -21,7 +23,7 @@
 </template>
 
 <script>
-// type = 1
+// type = 2
 import videojs from "video.js";
 export default {
     data() {
@@ -29,11 +31,33 @@ export default {
             player: null,
             loading: true,
             isPlay: false,
+            liveState: 0,
         };
+    },
+    watch: {
+        liveState(v) {
+            if (v !== 1) {
+                this.isPlay = 0;
+                this.player && this.player.pause();
+            }
+        },
+    },
+    computed: {
+        // 0:已结束，1:可播放，2:未开始，3:已播放
+        status() {
+            const { liveState, isPlay } = this;
+            if (isPlay) {
+                return 3;
+            }
+            return liveState;
+        },
+        statusStr() {
+            return ["直播已结束", "开始播放", "直播未开始", ""][this.status];
+        },
     },
     methods: {
         init({ url, coverUrl }) {
-            this.player = videojs("recordVideo", {
+            this.player = videojs("smartVideo", {
                 bigPlayButton: false,
                 textTrackDisplay: false,
                 posterImage: true,
@@ -61,7 +85,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.record-player {
+.smart-player {
     height: 100%;
     position: relative;
     background: #1e1e1e;

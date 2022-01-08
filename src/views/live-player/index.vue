@@ -49,6 +49,7 @@
                 <van-image
                     width="100vw"
                     height="200"
+                    fit="scale-down"
                     :src="liveData.coverUrl"
                 ></van-image>
             </div>
@@ -64,6 +65,7 @@ import { socket } from "@/utils/socket";
 
 import mixin from "@/views/live-player/js/mixin";
 import livePlayerChat from "@/views/live-player/component/live-player-chat";
+import Canvas from "@/views/live-player/js/canvas";
 
 export default {
     name: "live-player",
@@ -77,6 +79,7 @@ export default {
 
     mounted() {
         this.getByIdRoomInfo();
+        this.thumbsUpAni = new Canvas();
     },
 
     methods: {
@@ -165,6 +168,8 @@ export default {
 
                 // [点赞]
                 case "UPVOTE":
+                    // 开启点赞特效
+                    this.thumbsUpAni.start();
                     this.onSetUPVOTE(message);
                     break;
 
@@ -181,7 +186,7 @@ export default {
 
         /* 根据直播房间ID 获取对应直播信息 **/
         async getByIdRoomInfo() {
-            const roomId = "61d7afbf7465d96bf5638538";
+            const roomId = "61d8f0177465d96bf56387a7";
             const data = await this.$get("user/getRoomInfo", {
                 roomId,
             });
