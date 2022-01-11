@@ -12,7 +12,7 @@
         "axios": "0.24.0",
         "core-js": "3.20.1",
         "dayjs": "1.10.7",
-        "socket.io-client": "2.3.0",
+        "socket.io-client": "2.4.0",
         "vant": "2.12.38",
         "video.js": "7.17.0",
         "vue": "2.6.14",
