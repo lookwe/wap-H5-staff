@@ -1,7 +1,4 @@
 import socketIO from 'socket.io-client'
-import {
-    Toast
-} from 'vant'
 
 export const socket = {
     connect(query, receiveData) {
@@ -14,7 +11,7 @@ export const socket = {
                 })
             } catch (error) {
                 this.disConnect = false
-                Toast('连接异常')
+                console.log('连接异常');
             }
 
             // 链接成功
@@ -34,37 +31,20 @@ export const socket = {
 
             // 连接失败
             this._socket.on('error', () => {
-                Toast('连接失败')
+                console.log('连接失败');
                 this.disConnect = false
                 reject()
             })
 
             // 广播推送
             this._socket.on('showmsg', (data) => {
-                console.log('广播：', data);
+                console.log('广播：', data)
             })
-
-
         })
     },
     send(data) {
-        return new Promise((resolve, reject) => {
-            if (this._socket && this.disConnect) {
-                try {
-                    this._socket.emit('msgpub', JSON.stringify(data))
-                    resolve()
-                } catch (error) {
-                    console.log(error);
-                    reject()
-                    Toast('发送失败')
-                }
-            } else {
-                Toast('发送失败')
-                reject()
-            }
-        })
-    },
-
-
-
+        if (this._socket && this.disConnect) {
+            this._socket.emit('msgpub', JSON.stringify(data))
+        }
+    }
 }

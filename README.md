@@ -1,6 +1,6 @@
-# wap-h5-staff
+# wap-staff
 
-## 安装依赖
+## Project setup
 ```
 yarn install
 ```

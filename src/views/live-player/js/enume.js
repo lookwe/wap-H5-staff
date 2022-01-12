@@ -29,4 +29,6 @@ const MSGTYPE = {
     USER_SEND_IMG: 'USER_SEND_IMG',
     // [点赞]
     UPVOTE: 'UPVOTE',
+    // [更新人数]
+    LIVE_GUEST_LIST: 'LIVE_GUEST_LIST',
 }

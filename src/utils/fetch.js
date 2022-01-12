@@ -1,8 +1,21 @@
 import axios from 'axios'
+import store from '@/store'
+import router from '@/router'
 import {
     Toast
 } from 'vant'
 import LocalStorage from "@/utils/localStorage";
+
+
+function LogBackIn() {
+    // 清除缓存 退出
+    store.commit('account/setUserInfo', {})
+    LocalStorage.remove('liveData')
+    router.push({
+        name: 'login'
+    })
+}
+
 
 let baseUrl = process.env.VUE_APP_BASE_API
 let contentType = 'application/json;charset=UTF-8'
@@ -27,6 +40,10 @@ axios.interceptors.request.use(
  */
 axios.interceptors.response.use(
     (response) => {
+        // ['强制退出', 'token过期', '无效token']
+        if ([5003, 5002, 5001].includes(response.data.code)) {
+            LogBackIn()
+        }
         return response
     },
     (err) => {
@@ -37,6 +54,7 @@ axios.interceptors.response.use(
                     break
                 case 401:
                     err.message = '授权失败，请检查token'
+                    LogBackIn()
                     break
                 case 403:
                     err.message = '拒绝访问'

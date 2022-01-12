@@ -22,6 +22,7 @@ export default {
         document.getElementsByTagName('head')[0].appendChild(d)
         return id
     },
+
     // 日期格式化
     formatDate: (time) => {
         return time ? dayjs(time).format('YYYY-MM-DD') : '-'

@@ -10,5 +10,5 @@ module.exports = {
             }
         ]
     ],
-    ignore: ['/src/components/streamPlayer/js/hrtc.js']
+    ignore: ['./src/components/streamPlayer/js/hrtc.js']
 }

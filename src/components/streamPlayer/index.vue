@@ -23,8 +23,9 @@ import { mapState } from "vuex";
 import { bus } from "@/utils/bus";
 // 因浏览器限制，h5版本两条流都有后方可开始播放
 export default {
-    // 0:已结束，1:直播中，2:未开始
-    props: ["liveState"],
+    // liveState => 0:已结束，1:直播中，2:未开始
+    // position => 内屏幕位置 {x: 0.5, y: 0.5}
+    props: ["liveState", "position"],
     data() {
         return {
             streamState: 0, // 0:没有流，1:可播放，2:已播放
@@ -36,6 +37,9 @@ export default {
             if (v === 2) {
                 this.streamState = 0;
             }
+        },
+        position() {
+            this.setPos(this.position);
         },
     },
     computed: {
@@ -65,6 +69,9 @@ export default {
     methods: {
         // 初始化播放器
         async init({ roomNumber }) {
+            if (this.streamState == 2) {
+                return;
+            }
             this.loading = true;
             const res = await this.$post("hwRtc/student/getSignature", {
                 roomNumber,
@@ -73,10 +80,30 @@ export default {
             await WebRtc.init(roomNumber, res);
             this.loading = false;
         },
+
+        // 设置内屏位置
+        setPos({ x, y }) {
+            x = x || 0;
+            y = y || 0;
+
+            const outerBox = document.querySelector("#screen-player");
+            const innerBox = document.querySelector("#main-player");
+
+            const outerBoxWidth = outerBox.offsetWidth;
+            const outerBoxHeight = outerBox.offsetHeight;
+
+            const innerDifferWidth = outerBoxWidth - innerBox.offsetWidth;
+            const innerDifferHeight = outerBoxHeight - innerBox.offsetHeight;
+
+            innerBox.style.left = ((innerDifferWidth * 100) / 80) * x + "px";
+            innerBox.style.top = ((innerDifferHeight * y) / 80) * 100 + "px";
+        },
+
         // 开始播放
         _play() {
             WebRtc.play("main-player", "screen-player");
             this.streamState = 2;
+            this.setPos(this.position);
         },
         // 停止播放
         _stop() {},
@@ -100,6 +127,7 @@ export default {
         width: 100%;
         height: 100%;
         background: transparent;
+        z-index: 1;
     }
     #screen-player {
         width: 100%;
@@ -111,7 +139,6 @@ export default {
         position: absolute;
         bottom: 10px;
         right: 10px;
-        z-index: 1;
     }
 }
 </style>
