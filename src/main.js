@@ -8,6 +8,7 @@ import filters from '@/utils/filters'
 import utils from '@/utils'
 import '@/components'
 import './assets/icon/iconfont.css'
+import './permission.js'
 
 Object.keys(utils).forEach((k) => {
     Vue.prototype[`$${k}`] = utils[k]

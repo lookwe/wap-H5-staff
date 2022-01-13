@@ -345,6 +345,8 @@ export default {
                 coverUrl,
                 obsLiveUrl,
                 type,
+                dutyStartTime,
+                fileRecordDuration,
             } = this.liveData;
 
             const flay = this.playback || parseInt(type) === 2;
@@ -354,6 +356,8 @@ export default {
                 roomNumber: lecturerLivingSecretKey,
                 url,
                 coverUrl,
+                dutyStartTime,
+                fileRecordDuration,
             });
         },
 

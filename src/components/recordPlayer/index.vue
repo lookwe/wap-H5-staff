@@ -19,65 +19,67 @@
 
 <script>
 // type = 1
-import videojs from 'video.js'
-import 'video.js/dist/video-js.min.css'
+import videojs from "video.js";
+import "video.js/dist/video-js.min.css";
 export default {
     data() {
         return {
             player: null,
             loading: true,
-            isPlay: false
-        }
+            isPlay: false,
+        };
     },
     beforeDestroy() {
-        clearInterval(this.seekTimeHandler)
+        clearInterval(this.seekTimeHandler);
     },
     methods: {
         init({ url, coverUrl }) {
-            this.player = videojs('recordVideo', {
+            this.player = videojs("recordVideo", {
                 bigPlayButton: false,
                 textTrackDisplay: false,
                 posterImage: true,
                 errorDisplay: false,
                 controls: true,
-                poster: coverUrl
-            })
+                poster: coverUrl,
+            });
             this.player.src([
                 {
-                    type: 'application/x-mpegURL',
-                    src: url
-                }
-            ])
-            const self = this
-            this.player.on('seeking', function () {
+                    type: "application/x-mpegURL",
+                    src: url,
+                },
+            ]);
+            const self = this;
+            this.player.on("seeking", function () {
                 if (!self.isAutoChangePlayTime) {
-                    clearInterval(self.timeHandler)
+                    clearInterval(self.timeHandler);
                     self.timeHandler = setInterval(() => {
                         if (self.player.bufferedPercent() > 0) {
-                            clearInterval(self.timeHandler)
-                            self.player.currentTime(self.player.currentTime() + 0.5)
+                            clearInterval(self.timeHandler);
+                            self.player.currentTime(
+                                self.player.currentTime() + 0.5
+                            );
                         }
-                    }, 1000)
-                    self.isAutoChangePlayTime = true
+                    }, 1000);
+                    self.isAutoChangePlayTime = true;
                 } else {
-                    self.isAutoChangePlayTime = false
+                    self.isAutoChangePlayTime = false;
                 }
-            })
-            this.loading = false
+            });
+            this.loading = false;
             this.seekTimeHandler = setInterval(() => {
-                this.$emit('getCurrentTime', this.player.currentTime())
-            }, 3000)
+                this.$emit("getCurrentTime", this.player.currentTime());
+            }, 3000);
         },
         _play() {
             if (this.player) {
-                this.player.play()
-                this.isPlay = true
+                this.player.play();
+                this.isPlay = true;
             } else {
-                console.log('player is not defined...')
+                console.log("player is not defined...");
             }
-        }
-    }
-}
+        },
+    },
+};
 </script>
 <style lang="less" scoped>
 .record-player {
