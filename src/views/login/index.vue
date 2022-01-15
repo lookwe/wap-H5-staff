@@ -77,6 +77,19 @@ export default {
             avatarUrl: "", // 微信
         };
     },
+    created() {
+        const { urlParams, isNewUser, userData } = this.$route.query;
+
+        console.log("login页面：", this.$route.query);
+
+        this.urlParams = urlParams;
+        this.userData = userData;
+        this.isNewUser = isNewUser;
+
+        if (isNewUser) {
+            this.form.nickName = userData.nickName;
+        }
+    },
     methods: {
         ...mapMutations("account", ["setUserInfo"]),
         // 提交
@@ -84,14 +97,53 @@ export default {
             if (!this.isPhone) return;
 
             const loginApi = "user/registOrBindingCellPhone";
-            const userData = await this.$post(loginApi, parmas);
-            this.addUserCache(userData);
+
+            // 判断是否微信新用户
+            let apiParams = this.isNewUser
+                ? {
+                      openId: this.userData?.openId,
+                      publicId: this.userData?.openId,
+                      ...parmas,
+                  }
+                : parmas;
+
+            const userData = await this.$post(loginApi, apiParams);
+
+            // 模拟Api
+            // console.log(loginApi, apiParams);
+            // const userData = {
+            //     nickName: "lookwe",
+            //     openId: null,
+            //     province: null,
+            //     publicId: null,
+            //     remarkName: "kk",
+            //     sex: null,
+            //     subscribe: null,
+            //     subscribeTime: null,
+            //     token: "38_1567d4ae8bbd4f1297e429f12c8ca9d4",
+            //     avatarUrl: "",
+            //     cellphone: "17665090980",
+            //     city: null,
+            //     code: "402325",
+            //     country: null,
+            //     createTime: "2022-01-06T03:07:59Z",
+            // };
+
+            this.addUserCache(userData); // 缓存
 
             // 跳转首页
             if (userData.token) {
-                this.$router.push({
-                    path: "/live-player",
-                });
+                try {
+                    this.$router.push(
+                        {
+                            path: "/live-player",
+                            query: this.urlParams || {},
+                        },
+                        () => {}
+                    );
+                } catch (error) {
+                    console.error("登录页跳转报错：" + error);
+                }
             }
         },
 
@@ -141,15 +193,20 @@ export default {
         },
 
         addUserCache(userData) {
-            const avatarUrl = userData.headImgUrl || this.avatarUrl || "";
+            const avatarUrl =
+                userData.headImgUrl ||
+                this.userData?.headImgUrl ||
+                this.avatarUrl ||
+                "";
             const data = {
                 ...userData,
                 ...this.form,
                 avatarUrl,
-                code: undefined,
-                headImgUrl: undefined,
+                headImgUrl: avatarUrl,
             };
             this.setUserInfo(data);
+            console.log("设置缓存");
+            console.log(this.setUserInfo(data));
         },
     },
 };
@@ -169,10 +226,10 @@ export default {
         bottom: 4%;
         text-align: center;
         color: #999;
-        font-size: 0.75rem;
+        font-size: 0.75em;
         img {
             width: 30%;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.5em;
         }
     }
 }

@@ -8,6 +8,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 const livePlayer = () => import(/* webpackChunkName: 'livePlayer' */ '@/views/live-player/index.vue')
 const login = () => import(/* webpackChunkName: 'login' */ '@/views/login/index.vue')
+const webLogin = () => import(/* webpackChunkName: 'webLogin' */ '@/views/WEB/login/index.vue')
 
 Vue.use(VueRouter)
 
@@ -20,6 +21,11 @@ const routes = [
         path: '/login',
         name: 'login',
         component: login
+    },
+    {
+        path: '/web/login',
+        name: 'webLogin',
+        component: webLogin
     },
     {
         path: '/live-player',
