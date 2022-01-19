@@ -18,16 +18,6 @@ Object.keys(filters).forEach((k) => Vue.filter(k, filters[k]))
 
 Vue.config.productionTip = false
 
-var inBrowser = typeof window !== 'undefined';
-var UA = inBrowser && window.navigator.userAgent.toLowerCase();
-
-var isAndroid = (UA && UA.indexOf('android') > 0);
-var isIOS = (UA && /iphone|ipad|ipod|ios/.test(UA));
-
-// 判断是否非手机端
-Vue.prototype.$isWeb = (isAndroid || isIOS) ? false : true
-
-
 new Vue({
     router,
     store,

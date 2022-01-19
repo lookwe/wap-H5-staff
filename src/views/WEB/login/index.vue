@@ -1,6 +1,7 @@
 <template>
     <div class="web-login">
         <div class="login-box">
+            <h3>登录</h3>
             <login />
         </div>
     </div>
@@ -34,10 +35,15 @@ export default {
 
     .login-box {
         width: 400px;
-        height: 260px;
+        height: 285px;
         margin: 200px auto;
         border-radius: 5px;
         overflow: hidden;
+        background: #fff;
+
+        h3 {
+            text-indent: 15px;
+        }
 
         /deep/.van-cell {
             font-size: 16px;
