@@ -9,6 +9,11 @@ const constant = {
         setUserInfo(state, userInfo) {
             state.userInfo = userInfo
             LocalStorage.set("userInfo", userInfo);
+        },
+
+        emptyUser(state) {
+            state.userInfo = {}
+            LocalStorage.removeAll()
         }
     }
 

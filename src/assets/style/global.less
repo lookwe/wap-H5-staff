@@ -84,6 +84,12 @@
 .loop(0, 5, 80);
 
 // 颜色
+.c-txt {
+    color: #9f9f9f;
+}
+.c-000 {
+    color: #000;
+}
 .c-p {
     color: @primary-color;
 }
@@ -144,11 +150,18 @@
     flex-wrap: wrap;
 }
 
+.f-row-re {
+    flex-direction: row-reverse
+}
+
 .tr {
     text-align: right;
 }
 .tc {
     text-align: center;
+}
+.te {
+    text-align: end;
 }
 .w100 {
     width: 100%;
@@ -205,11 +218,36 @@
 .u-page {
     padding: 15px 15px 40px 15px;
 }
+.u-box {
+    padding:  0 15px;
+}
 
 .u-box {
-    padding: 15px 15px 0 15px;
+    padding: 15px 15px 5px 15px;
 }
 
 .u-lfet-2 {
     margin-left: 12rpx;
+}
+
+
+::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+}
+
+::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 10px;
+    //background-color: #8c8c8c; // @primary-color;
+    background-color: rgba(0, 0, 0, 0.25);
+}
+
+::-webkit-scrollbar-track {
+    background-color: #f6f6f6;
+}
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-track {
+    border: 0;
 }

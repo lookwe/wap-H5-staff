@@ -1,32 +1,50 @@
 <template>
     <!-- 下半部 -->
-    <div class="live-chat">
-        <!-- 直播小助手 -->
-        <div class="live-assistant flex jsb ac" v-if="topImgInfo.imageUrl">
-            <div class="flex ac">
-                <van-image
-                    round
-                    width="25"
-                    height="25"
-                    :src="topImgInfo.avatarUrl"
-                ></van-image>
-                <span class="fz-12 u-lfet-2 ml10">{{
-                    topImgInfo.nickName
-                }}</span>
+    <div class="live-chat live-chat-ada">
+        <div class="top-box">
+            <div class="u-box">
+                <!-- 直播小助手 -->
+                <div
+                    class="live-assistant flex jsb ac"
+                    v-if="topImgInfo.imageUrl"
+                >
+                    <div class="flex ac">
+                        <van-image
+                            round
+                            width="25"
+                            height="25"
+                            :src="topImgInfo.avatarUrl"
+                            @click="_showImg(topImgInfo.avatarUrl)"
+                        ></van-image>
+                        <span class="fz-12 u-lfet-2 ml10">{{
+                            topImgInfo.nickName
+                        }}</span>
+                    </div>
+                    <van-image
+                        width="30"
+                        height="30"
+                        @click="_showImg(topImgInfo.imageUrl)"
+                        :src="topImgInfo.imageUrl"
+                    ></van-image>
+                </div>
+                <!-- 公告 -->
+                <div
+                    @click="isExpand = !isExpand"
+                    :class="[
+                        'fz-14',
+                        'live-notice',
+                        isExpand ? 'u-line-1' : '',
+                    ]"
+                >
+                    <span class="fw-b">【公告】</span>
+                    <span>
+                        {{ announcement }}
+                    </span>
+                </div>
             </div>
-            <van-image
-                width="30"
-                height="30"
-                :src="topImgInfo.imageUrl"
-            ></van-image>
         </div>
-        <!-- 公告 -->
-        <div class="fz-14 live-notice">
-            <span class="fw-b">【公告】</span>
-            <span>
-                {{ announcement }}
-            </span>
-        </div>
+        <div :style="{ height: topImgInfo.imageUrl ? '105px' : '50px' }"></div>
+
         <!-- 用户聊天模块 -->
         <div class="speak-list">
             <div
@@ -36,7 +54,9 @@
             >
                 <!-- 提示类型 -->
                 <template v-if="item.isMsgTitle">
-                    <span class="new-user-add"> {{ item.content }} </span>
+                    <span class="new-user-add">
+                        {{ item.content }}
+                    </span>
                 </template>
 
                 <!-- flag 1=讲师。2=助教 。其他=学生  -->
@@ -66,6 +86,7 @@
                 </template>
             </div>
         </div>
+
         <!-- 右侧点赞特效栏 -->
         <div class="live-right-handel">
             <canvas
@@ -75,6 +96,7 @@
                 style="width: 100px; height: 220px"
             ></canvas>
         </div>
+
         <!-- 底部发言模块 回访模式不显示 -->
         <div class="user-bottom-handel" v-if="!playback">
             <div class="flex jsb ac">
@@ -90,7 +112,8 @@
                         background="#1e1e1e"
                         placeholder="请输入内容"
                         @search="_sendInfo"
-                    />
+                    >
+                    </van-search>
                 </div>
 
                 <div class="user-handel flex jsb ac">
@@ -100,12 +123,25 @@
                     <div class="bnt">
                         <van-icon class-prefix="icon" name="yuyin" />
                     </div> -->
+
+                    <div class="bnt" v-show="userValue">
+                        <van-icon
+                            name="share"
+                            @click="_sendInfo"
+                            size="30"
+                            color="#fff"
+                        />
+                    </div>
                     <div
                         id="dianzan"
                         class="bnt"
                         @click="_onThumbClick({ idName: 'dianzan' })"
                     >
-                        <van-icon class-prefix="icon" name="Frame347" />
+                        <van-icon
+                            class-prefix="icon"
+                            name="Frame347"
+                            color="#f8c033"
+                        />
                     </div>
                 </div>
             </div>
@@ -114,15 +150,18 @@
 </template>
 
 <script>
+import { ImagePreview } from "vant";
 import Canvas from "./js/canvas";
 export default {
     props: ["announcement", "playback"],
     data() {
         return {
             userValue: "",
-            msgList: [], // 消息列表
+            msgList: [], // 消息列表1
 
             topImgInfo: {},
+
+            isExpand: false, //
         };
     },
     computed: {},
@@ -134,6 +173,7 @@ export default {
         setMsg(msgData) {
             this.msgList.push(msgData);
             this._onSenScrollTop();
+            this._omAddImgClick();
         },
         setMsgAll(list) {
             this.msgList = list;
@@ -148,10 +188,32 @@ export default {
             this.thumbsUpAni.start();
         },
 
+        _showImg(src) {
+            ImagePreview([src]);
+        },
+
+        _omAddImgClick() {
+            this.$nextTick(() => {
+                document
+                    .querySelectorAll(".live-admin-speak .content")
+                    .forEach((item) => {
+                        item.addEventListener("click", function ({ target }) {
+                            if (target.alt === "img") {
+                                console.log(target.src);
+                                ImagePreview([target.src]);
+                            }
+                        });
+                    });
+            });
+        },
+
         // 新增消息后，滚动条到底部
         _onSenScrollTop() {
             const el = document.querySelector(".live-chat");
-            el.scrollTop = el.scrollHeight;
+            console.log(el.scrollTop, el.scrollHeight);
+            el.scrollTop = el.scrollHeight + 1000;
+
+            console.log(el.scrollTop);
         },
 
         // 发送socket消息，和socket约定格式
@@ -185,12 +247,20 @@ export default {
     },
 };
 </script>
+
 <style scoped lang="less">
 .live-chat {
     overflow-y: auto;
     margin-top: 5px;
     position: relative;
-    padding: 15px;
+    padding: 0 15px 15px;
+
+    .top-box {
+        position: fixed;
+        width: 100%;
+        left: 0;
+        background: #1e1e1e;
+    }
 
     .live-notice {
         color: #fff5db;
@@ -207,10 +277,14 @@ export default {
     .speak-list {
         font-weight: 600;
         font-size: 14px;
-        margin-bottom: 65px;
+        margin-bottom: 85px;
         width: 80vw;
         &__li {
             margin: 9px 0;
+
+            &:last-child {
+                margin-bottom: 40px;
+            }
         }
         .user-speak-name {
             color: #a2c8df;
@@ -235,21 +309,13 @@ export default {
             .user {
                 float: left;
             }
-            .content {
+            /deep/ .content {
                 word-wrap: break-word;
+                img {
+                    width: 100%;
+                }
             }
         }
-    }
-
-    .speak-info-sun {
-        padding: 2px 4px;
-        background: #fff;
-        color: #70584f;
-        display: inline-block;
-        border-radius: 20px;
-        position: absolute;
-        top: -25px;
-        left: 15px;
     }
 
     .live-right-handel {
@@ -272,6 +338,19 @@ export default {
 
         .user-speak-box {
             width: 86%;
+            transition: all 0.5s;
+
+            // 提交 99+
+            .speak-info-sun {
+                padding: 2px 4px;
+                background: #fff;
+                color: #70584f;
+                display: inline-block;
+                border-radius: 20px;
+                position: absolute;
+                top: -25px;
+                left: 15px;
+            }
         }
 
         .user-handel {

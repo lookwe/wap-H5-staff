@@ -63,6 +63,15 @@
 </template>
  
 <script>
+function isWeb() {
+    var inBrowser = typeof window !== "undefined";
+    var UA = inBrowser && window.navigator.userAgent.toLowerCase();
+
+    var isAndroid = UA && UA.indexOf("android") > 0;
+    var isIOS = UA && /iphone|ipad|ipod|ios/.test(UA);
+    return isAndroid || isIOS ? false : true;
+}
+
 import { mapMutations } from "vuex";
 export default {
     name: "login",
@@ -134,10 +143,11 @@ export default {
             // 跳转首页
             if (userData.token) {
                 try {
+                    const path = isWeb ? "/web-player" : "/live-player";
                     this.$router.push(
                         {
-                            path: "/live-player",
-                            query: this.urlParams || {},
+                            path,
+                            query: this.urlParams || this.$route.query,
                         },
                         () => {}
                     );
@@ -171,7 +181,7 @@ export default {
         },
 
         isPhone() {
-            if (!/\d{11}/.test(this.form.cellphone)) {
+            if (!/^1\d{10}$/.test(this.form.cellphone)) {
                 this.$toast("手机号格式错误 ！");
                 return false;
             }

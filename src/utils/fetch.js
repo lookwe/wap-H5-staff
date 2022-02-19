@@ -13,7 +13,7 @@ function LogBackIn() {
     LocalStorage.remove('liveData')
     router.push({
         name: 'login'
-    })
+    }, () => {})
 }
 
 

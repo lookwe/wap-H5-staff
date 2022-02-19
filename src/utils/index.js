@@ -59,19 +59,6 @@ export default {
         return newArr
     },
 
-    setLocalData() {
-
-    },
-
-    /** 判断是否PC端 */
-    isWeb () {
-        var inBrowser = typeof window !== 'undefined';
-        var UA = inBrowser && window.navigator.userAgent.toLowerCase();
-
-        var isAndroid = (UA && UA.indexOf('android') > 0);
-        var isIOS = (UA && /iphone|ipad|ipod|ios/.test(UA));
-        return (isAndroid || isIOS) ? false : true
-    },
 
     //複製文本內容
     copyText: (text, callBack) => {

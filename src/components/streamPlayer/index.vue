@@ -1,5 +1,5 @@
 <template>
-    <div class="stream-player">
+    <div class="stream-player" :style="getBgStyle">
         <van-loading class="loading" v-if="loading" type="spinner" />
         <template v-else>
             <div class="btn-con flex c" v-if="status !== 3">
@@ -30,6 +30,8 @@ export default {
         return {
             streamState: 0, // 0:没有流，1:可播放，2:已播放
             loading: true,
+
+            coverUrl: "",
         };
     },
     watch: {
@@ -56,6 +58,15 @@ export default {
         statusStr() {
             return ["直播已结束", "开始播放", "直播未开始", ""][this.status];
         },
+        getBgStyle() {
+            const url = this.coverUrl;
+            const style = {
+                background: url ? `url('${url}') center no-repeat` : "#1e1e1e",
+                "background-size": "cover",
+            };
+            console.log("样式---------：", style);
+            return style;
+        },
     },
     mounted() {
         const self = this;
@@ -68,7 +79,10 @@ export default {
     },
     methods: {
         // 初始化播放器
-        async init({ roomNumber }) {
+        async init({ roomNumber, coverUrl }) {
+            this.coverUrl = coverUrl;
+            console.log(this.getBgStyle);
+
             if (this.streamState == 2) {
                 return;
             }
@@ -83,8 +97,9 @@ export default {
 
         // 设置内屏位置
         setPos({ x, y }) {
-            x = x || 0;
-            y = y || 0;
+            // 默认 0.8 右下角
+            x = x || 0.8;
+            y = y || 0.8;
 
             const outerBox = document.querySelector("#screen-player");
             const innerBox = document.querySelector("#main-player");
@@ -116,6 +131,7 @@ export default {
     height: 100%;
     position: relative;
     background: #1e1e1e;
+
     .loading {
         position: absolute;
         left: 50%;

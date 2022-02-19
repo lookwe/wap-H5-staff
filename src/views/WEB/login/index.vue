@@ -14,13 +14,6 @@ export default {
     components: {
         login,
     },
-    data() {
-        return {};
-    },
-    created() {
-        console.log("是否WEB端", this.$isWeb);
-    },
-    methods: {},
 };
 </script>
  

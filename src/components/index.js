@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Tabbar, TabbarItem, Button, Image as VanImage, Search, Icon, Form, Field, Toast, Loading } from 'vant' //引入组件
+import { Tabbar, TabbarItem, Button, Image as VanImage, Search, Icon, Form, Field, Toast, Loading} from 'vant' //引入组件
 
 // 直播组件
 import StreamPlayer from './streamPlayer'

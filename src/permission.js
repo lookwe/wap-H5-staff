@@ -8,7 +8,17 @@ import {
 
 //微信环境
 const ua = window.navigator.userAgent.toLowerCase()
-const wx = ua.match(/MicroMessenger/i) == 'micromessenger'
+const isWeiXin = ua.match(/MicroMessenger/i) == 'micromessenger'
+
+/** 判断是否PC端 */
+function isWeb () {
+    var inBrowser = typeof window !== 'undefined';
+    var UA = inBrowser && ua
+
+    var isAndroid = (UA && UA.indexOf('android') > 0);
+    var isIOS = (UA && /iphone|ipad|ipod|ios/.test(UA));
+    return (isAndroid || isIOS) ? false : true
+}
 
 // 微信授权
 function wechatAuthorize(query, next) {
@@ -95,17 +105,26 @@ router.beforeEach(async (to, from, next) => {
         console.error("自定义url解参函数报错:" + error);
     }
 
-    console.log('to:', to);
-    console.log('from:', from);
+    
+    if (['/login'].includes(to.path)) {
+        if (isWeb()) {
+            next({
+                path: '/web-login',
+                query: {
+                   
+                        ...to.query,
+                        ...from.query,
+                    
+                }
+            })
+        }
 
-    if (to.path === '/login') {
-
-        // 微信授权判断用户是否新用户
+        // 微信授权判断用户是否新用户 - 是则先登录授权注册
         if (to.query.isNewUser) {
             next()
         } else {
             const wecahtParams = vueIsNotQuery ? to.query : cuctomQuery
-            wx ? wechatAuthorize(wecahtParams, next) : next()
+            isWeiXin ? wechatAuthorize(wecahtParams, next) : next()
         }
     } else {
 
@@ -113,14 +132,19 @@ router.beforeEach(async (to, from, next) => {
         if (LocalStorage.get("userInfo")?.token) {
             next();
         } else {
-            next();
-            // next({
-            //     path: '/login',
-            //     query: {
-            //         ...to.query,
-            //         ...from.query,
-            //     }
-            // })
+
+            if (to.path === '/web-login') {
+                next();
+                return
+            }
+
+            next({
+                path: '/login',
+                query: {
+                    ...to.query,
+                    ...from.query,
+                }
+            })
         }
     }
 })

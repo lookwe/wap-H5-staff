@@ -1,98 +1,143 @@
 <template>
-    <div class="live-player">
-        <!-- 上半部 -->
-        <div class="live-upper-half">
-            <!-- 头部信息 -->
-            <div class="live-header flex jsb ac u-box">
-                <div class="live-user flex">
-                    <div>
-                        <!-- <van-image
-                            round
-                            width="35"
-                            height="35"
-                            src="@/assets/images/logo.png"
-                        /> -->
-                        <img
-                            src="@/assets/images/logo.png"
-                            width="35"
-                            height="35"
-                            alt=""
-                        />
+    <div class="web-live-player">
+        <headerUser></headerUser>
+        <main class="web-main">
+            <div class="player-box">
+                <div id="player-video">
+                    <component
+                        v-if="currentVideoComponent"
+                        v-bind:is="currentVideoComponent"
+                        ref="videoPlayer"
+                        :liveState="liveData.liveState"
+                        :position="liveData.recordJobGetRespVO"
+                        @getCurrentTime="onCurrentTime"
+                    />
+                </div>
+                <div class="bottom-copyright">升学教育信息技术中心</div>
+            </div>
+            <div class="chat-box">
+                <!-- 聊天室切换 -->
+                <!-- <div class="top-nav-box">
+                    <div
+                        :class="chatType == 0 ? 'active' : ''"
+                        @click="chatType = 0"
+                    >
+                        聊天室
                     </div>
-                    <div class="live-user-rigth">
-                        <div class="live-user-name u-line-1">升学教育</div>
-                        <div class="fz-12">
-                            点赞: {{ liveData.cacheUpvote }}
+                    <div
+                        :class="chatType == 1 ? 'active' : ''"
+                        @click="chatType = 1"
+                    >
+                        在线人数(292)
+                    </div>
+                </div> -->
+
+                <!-- 聊天记录 -->
+                <h3>聊天室</h3>
+                <div class="public-notice">
+                    <span class="fw-b">【公告】</span>
+                    <span>{{ liveData.announcement }}</span>
+                </div>
+
+                <!-- 置顶图片 -->
+                <div
+                    class="live-assistant flex jsb ac"
+                    v-if="topImgInfo.imageUrl"
+                >
+                    <div class="flex ac">
+                        <van-image
+                            round
+                            width="25"
+                            height="25"
+                            :src="topImgInfo.avatarUrl"
+                        />
+                        <span class="fz-16 u-lfet-2 ml10">{{
+                            topImgInfo.nickName
+                        }}</span>
+                    </div>
+                    <van-image
+                        width="30"
+                        height="30"
+                        :src="topImgInfo.imageUrl"
+                    />
+                </div>
+
+                <!-- 聊天记录 -->
+                <div
+                    class="chat-list"
+                    :style="{ height: overChatHeigth + 'px' }"
+                >
+                    <!-- 对方信息 -->
+                    <div
+                        v-for="(item, index) in msgList"
+                        :key="index"
+                        :class="['flex', item.isOneself ? 'f-row-re' : '']"
+                    >
+                        <div>
+                            <van-image
+                                round
+                                width="40"
+                                height="40"
+                                :src="item.avatarUrl"
+                            />
+                        </div>
+                        <div
+                            :class="[
+                                'chat-info',
+                                item.isOneself ? 'oneself' : '',
+                            ]"
+                        >
+                            <div class="fz-12 c-txt">
+                                {{ item.nickName }} {{ item.time }}
+                            </div>
+                            <div class="chat-msg" v-html="item.content"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 观看-前榜六大哥 -->
-                <div class="watch-user flex" v-if="!playback">
-                    <div class="temp-position"></div>
-                    <div
-                        v-for="(item, index) in getUserNo6"
-                        :key="index"
-                        class="watch-user-image"
-                    >
-                        <van-image
-                            round
-                            width="30"
-                            height="30"
-                            :src="item.avatarUrl || ''"
-                        />
-                    </div>
-
-                    <!-- 直播间人数 -->
-                    <div class="watch-user-sum fz-12 fw-b">
-                        {{ getUserTotalNum }}
-                    </div>
+                <!-- 发送消息 -->
+                <div class="bottom-input">
+                    <input
+                        type="text"
+                        class="input-msg"
+                        :placeholder="'同学、发个言吧' + overChatHeigth"
+                        v-model="userValue"
+                    />
+                    <van-button type="primary" @click="_sendInfo">
+                        <span class="c-000">发送</span>
+                    </van-button>
                 </div>
             </div>
-
-            <!-- 直播题目 -->
-            <div class="fz-16 u-line-2 u-box">
-                {{ liveData.courseName }}
-            </div>
-
-            <!-- 直播屏幕 -->
-            <div class="live-main">
-                <component
-                    v-if="currentVideoComponent"
-                    v-bind:is="currentVideoComponent"
-                    ref="videoPlayer"
-                    :liveState="liveData.liveState"
-                    :position="liveData.recordJobGetRespVO"
-                    @getCurrentTime="onCurrentTime"
-                ></component>
-            </div>
-        </div>
-        <!-- 下半部 -->
-        <LiveChat
-            ref="liveChat"
-            :playback="playback"
-            :announcement="liveData.announcement"
-            @socketSend="socketSend"
-        />
+        </main>
     </div>
 </template>
-
+ 
 <script>
+import headerUser from "./components/headerUser";
 import { mapGetters, mapMutations } from "vuex";
 import { socket } from "@/utils/socket";
 
-import { tranNumber } from "./js/tool";
-
 export default {
-    name: "live-player",
+    name: "webPlayer",
+    components: {
+        headerUser,
+    },
     data() {
         return {
+            chatType: 0, // 0-聊天室，1-在线人数,
+            userValue: "",
+
             playback: false, // 是否录播课
             liveData: {}, //直播房间信息
             guestSession: "", // 访客Session
 
             userList: [], // 观看用户
             totalNum: 0, // 总人数
+
+            topImgInfo: {}, // 置顶图片信息
+            msgList: [], // 消息列表,
+
+            overChatHeigth: 500, // 默认聊天记录高度
         };
     },
     computed: {
@@ -111,35 +156,37 @@ export default {
                 type - 1
             ];
         },
-
-        // 获取说用户类型 前榜6大哥
-        getUserNo6() {
-            console.log("--------");
-            console.log(this.userList);
-            if (!Array.isArray(this.userList)) {
-                return [];
-            }
-            return this.userList
-                .filter((item) => item.isAnchor == 0)
-                .filter((item, index) => {
-                    return index <= 6;
-                });
-        },
-
-        // 获取总人数
-        getUserTotalNum() {
-            const base = this.liveData.userJoinNum || this.getUserNo6.length;
-            return tranNumber(this.totalNum + base, 1);
-        },
     },
     mounted() {
         this.getByIdRoomInfo();
+
+        const boxh = document.querySelector(".chat-box").offsetHeight;
+        const puhh = document.querySelector(".public-notice").offsetHeight; // 65
+        let heigth = boxh - puhh - 25 - 165;
+
+        if (this.topImgInfo.imageUrl) {
+            heigth -= 70;
+        }
+
+        this.overChatHeigth = heigth;
     },
     methods: {
+        // 用户发送消息
+        _sendInfo() {
+            if (/^\s+$/.test(this.userValue) || this.userValue == "") {
+                this.userValue = "";
+                return;
+            }
+            this.socketSend("GUEST_SEND_MSG", {
+                message: this.userValue,
+            });
+            this.userValue = "";
+        },
+
         ...mapMutations("account", ["setUserInfo", "emptyUser"]),
         // 处理消息回调
         onMsgSessinCallback(val) {
-            console.log("会话信息：", val);
+            console.log("连接会话信息：", val);
             const { message, sendTo, sessionTo } = val;
             switch (val.messageType) {
                 // 老师拖拽视频
@@ -170,12 +217,6 @@ export default {
 
                 // 访客加入房间-访客 访客连接成功后, 提示有人加入
                 case "GUEST_JOIN_ROOM":
-                    // TODO 需求变更 展示不提示
-                    // this.$refs.liveChat.setMsg({
-                    //     ...message,
-                    //     isMsgTitle: true
-                    // })
-
                     if (sendTo === this.userInfo.id) {
                         this.guestSession = sessionTo;
                     }
@@ -183,22 +224,18 @@ export default {
                     this.userList.push(message);
                     break;
 
-                // [老师发消息] 访客发送消息。接受游客发的消息
+                // 接受消息
                 case "GUEST_SEND_MSG":
                     // flag 1=讲师。2=助教 。其他=学生
-                    this.$refs.liveChat.setMsg({
+                    this.setMsg({
                         ...message,
                         flag: val.flag,
                     });
+
                     break;
 
                 // 访客退出
                 case "GUEST_EXIT":
-                    // todo 暂时不显示用户退出
-                    // this.$refs.liveChat.setMsg({
-                    //     ...message,
-                    //     isMsgTitle: true,
-                    // });
                     this.totalNum = parseInt(message.onlineCount) || 0;
                     break;
 
@@ -216,7 +253,7 @@ export default {
 
                 // 接收置顶图片
                 case "USER_TOP_IMG":
-                    this.$refs.liveChat.setTopInfo(JSON.parse(message));
+                    this.topImgInfo = JSON.parse(message);
                     break;
 
                 // 禁言
@@ -238,7 +275,7 @@ export default {
 
                 // 图片消息 接受图片信息
                 case "USER_SEND_IMG":
-                    this.$refs.liveChat.setMsg({
+                    this.setMsg({
                         ...message,
                         flag: val.flag,
                     });
@@ -246,8 +283,8 @@ export default {
 
                 // [点赞]
                 case "UPVOTE":
-                    this.$refs.liveChat.upvoteAni();
-                    this.liveData.cacheUpvote = message;
+                    // this.$refs.liveChat.upvoteAni();
+                    //this.liveData.cacheUpvote = message;
                     break;
 
                 // 人数数量设置 或 当前用户设置别名
@@ -321,7 +358,7 @@ export default {
                     });
 
                 this.$nextTick(() => {
-                    this.$refs.liveChat.setMsgAll(msgList);
+                    this.setMsgAll(msgList);
                 });
             }
         },
@@ -336,6 +373,7 @@ export default {
                 roomId,
             });
             console.log("直播间信息：", data);
+            console.log(this.playback);
             this.setLiveData(data || {});
 
             this.$nextTick(() => {
@@ -393,14 +431,14 @@ export default {
                 avatarUrl: this.userInfo.avatarUrl || "",
             };
 
-            console.log("initSocket:", query);
+            console.log("连接直播间聊天====initSocket:", query);
 
             // 开始连接房间聊天
             socket.connect(query, this.onMsgSessinCallback);
         },
 
         // 发送socket消息
-        socketSend({ type, data }) {
+        socketSend(type, data) {
             const json = {
                 messageType: type,
                 data: {
@@ -419,62 +457,172 @@ export default {
             };
             socket.send(json);
         },
+
+        // 添加聊天信息
+        setMsg(msgData) {
+            this.msgList.push({
+                ...msgData,
+                time: new Date().toLocaleTimeString(),
+                // 判断是否自己发的
+                isOneself: this.userInfo.nickName === msgData.nickName,
+            });
+            this._onSenScrollTop();
+            // this._omAddImgClick();
+        },
+        setMsgAll(list) {
+            this.msgList = list;
+            this._onSenScrollTop();
+        },
+
+        _onSenScrollTop() {
+            this.$nextTick(() => {
+                const el = document.querySelector(".chat-list");
+                el.scrollTop = el.scrollHeight + 1000;
+            });
+        },
     },
 };
 </script>
+ 
+<style scoped lang="less">
+.web-live-player {
+    .web-main {
+        width: 100vw;
+        height: calc(100vh - 65px);
+        display: flex;
 
-<style lang="less" scoped>
-.live-player {
-    background: #1e1e1e;
-    height: 100vh;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-
-    // 顶部
-    .live-header {
-        .live-user {
-            flex: 3;
-            overflow: hidden;
-            .live-user-rigth {
-                margin-left: 7px;
-            }
-            .live-user-name {
-                margin: 8px 0 5px 0;
-                width: 70px;
-                font-size: 13.5px;
-            }
-        }
-        .watch-user {
-            flex: 5;
+        .player-box {
+            flex: 4;
+            background: #1e1e1e;
             position: relative;
-            flex-direction: row-reverse;
-            .temp-position {
-                width: 12px;
+            #player-video {
+                width: 100%;
+                height: 650px;
+                margin-top: 100px;
+                background: #fff;
             }
-            .watch-user-image {
-                margin: 0 3.5px;
-            }
-            .watch-user-sum {
+            .bottom-copyright {
                 position: absolute;
-                right: 0;
-                top: 50%;
-                transform: translatey(-50%);
-                padding: 1px 5px;
-                background: #3f3f3f;
-                color: #dddddd;
-                border-radius: 40%;
+                left: 50%;
+                bottom: 20px;
+                transform: translateX(-50%);
+                font-size: 15.5px;
+                color: #fff;
             }
         }
-    }
 
-    // 直播屏幕
-    .live-main {
-        height: 200px;
-        //background: #fff;
-        margin-top: 15px;
+        .chat-box {
+            flex: 1;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+            border-top: 2px #e8e8e8 solid;
+            border-left: 1px #1e1e1e solid;
+
+            // 聊天室切换
+            .top-nav-box {
+                width: 70%;
+                height: 50px;
+                margin: 20px auto;
+                border-radius: 15px;
+                overflow: hidden;
+                display: flex;
+                & > div {
+                    flex: 1;
+                    text-align: center;
+                    line-height: 50px;
+                    background: #e9e9e9;
+                    cursor: pointer;
+
+                    &.active {
+                        background: #f9c034;
+                    }
+                }
+            }
+
+            // 公告
+            .public-notice {
+                background: #fffce6;
+                padding: 8px 10px;
+                border-radius: 8px;
+                border: 2px solid #fbe194;
+            }
+
+            // 置顶图片
+            .live-assistant {
+                background: #cce0ff;
+                color: #1061ea;
+                padding: 10px 15px;
+                margin-bottom: 5px;
+            }
+
+            // 聊天记录
+            .chat-list {
+                margin-top: 15px;
+                margin-bottom: 50px;
+                min-height: 56vh;
+                overflow-y: auto;
+                .chat-info {
+                    margin-left: 10px;
+
+                    &.oneself {
+                        margin-right: 10px;
+                        margin-left: 0;
+                    }
+
+                    .chat-msg {
+                        font-size: 14px;
+                        padding: 4px 8px;
+                        background: #e7e7e7;
+                        margin-top: 5px;
+
+                        /deep/ img {
+                            max-width: 100%;
+                        }
+                    }
+                }
+
+                & > div {
+                    margin-bottom: 15px;
+                }
+            }
+
+            .bottom-input {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                height: 50px;
+                width: 100%;
+                border-top: 2px #e8e8e8 solid;
+                background: #fff;
+                z-index: 10;
+                padding: 15px;
+                display: flex;
+                overflow: hidden;
+
+                .input-msg {
+                    width: 72%;
+                    height: 45px;
+                    outline-style: none;
+                    border: 1px solid #c0c4cc;
+                    border-radius: 5px;
+                    padding: 0;
+                    padding: 10px 15px;
+                    box-sizing: border-box;
+                    font-family: "Microsoft soft";
+                    &:focus {
+                        border-color: #f07b00;
+                        outline: 0;
+                        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+                            #f07b00;
+                        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+                            #f07b00;
+                    }
+                    margin-right: 10px;
+                }
+            }
+        }
     }
 }
 </style>
